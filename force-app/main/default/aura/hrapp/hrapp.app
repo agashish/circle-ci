@@ -1,5 +1,4 @@
 <aura:application extends="force:slds" >
     <!-- <c:hrcontainer /> -->
-    <span>Welcome Ashish</span>
-    <span>...</span>
+    <span>Welcome Ashish Gupta Ji</span>
 </aura:application>
