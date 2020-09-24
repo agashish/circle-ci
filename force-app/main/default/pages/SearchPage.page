@@ -1,0 +1,96 @@
+<apex:page sidebar="false" showHeader="false" docType="html-5.0" controller="SearchAccount" >
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" 
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+    rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+     
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+    <script>
+        $(function(){ 
+        
+            $(document).on('keypress', '.accountName', function(event) {
+            
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                if(keycode == '13'){
+                
+                    event.preventDefault();
+                    
+                    var accountSearchText = $(this).val();
+                
+                    if($.trim( accountSearchText ) && $.trim( accountSearchText ) != '') {
+                    
+                        setTimeout(function(){ __callOut( $.trim( accountSearchText ) ) }, 300);                                    
+                    
+                    } 
+                    
+                    var __callOut = function( searchText  ) {
+                        console.log('searchText : ', searchText );
+                        
+                        // #### LOAD ACTION
+                        loadAccounts(searchText);
+                    }  
+                }
+            
+                        
+            });
+            
+        });
+        
+        function contactLoadByAccountId(accountId) {
+        
+            alert(accountId);
+            // loadContacts(accountId);
+           
+        }
+    </script>
+    <Apex:form >
+    
+        <apex:actionFunction name="loadAccounts" action="{!searchAccount}" reRender="accountList,relatedContactList">
+            <apex:param name="searchText" value="" assignTo="{!searchText}"/>
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="loadContacts" action="{!loadContactById}" reRender="relatedContactList">
+            <apex:param name="accountId" value="" assignTo="{!accountId}"/>
+        </apex:actionFunction>
+        
+        <div class="">
+            <div class="row">
+                <div class="col-4">  
+                    <!-- SEARCH COMPONENT REFERENCE -->
+                    <c:searchComponent />
+                   
+                </div>
+                       
+                <div class="col-8"> 
+                    <c:accountrecords accountRecordsData="{!accResult}" isAccess="{!isShow}" />
+                </div>
+            </div>
+            
+            <!-- NOW CONTACTS RECORDS AFTER CHOOSIGN MAIN ACCOUNT -->
+            <div class="row"> 
+                <div class="col-12">
+                        
+                    <apex:outputPanel id="relatedContactList" >
+                        
+                        <apex:outputPanel rendered="{!noRecords}">
+                            <apex:pageblock > 
+                                {!commonMessage}
+                            </apex:pageblock>
+                        </apex:outputPanel>
+                          
+                        <apex:outputPanel rendered="{!if(contactsList.size != 0, true, false)}">
+                        <!-- code here -->
+                            <c:contactRecords contactRecordsData="{!contactResult[0].Contacts}"/>
+                        </apex:outputPanel>
+                    </apex:outputPanel>                
+                </div>  
+            </div>        
+        </div>
+    
+    </Apex:form>
+
+</apex:page>

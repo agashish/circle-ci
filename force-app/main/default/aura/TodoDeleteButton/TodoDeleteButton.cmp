@@ -1,0 +1,5 @@
+<aura:component >
+    <aura:attribute name="rowIndex" type="Integer"/>
+    <aura:registerEvent name="deleteTask" type="c:TodoDeleteEvent"/>
+	<button class="slds-button slds-button_destructive" onclick="{!c.deleteRow}">Remove - {!v.rowIndex}</button>
+</aura:component>

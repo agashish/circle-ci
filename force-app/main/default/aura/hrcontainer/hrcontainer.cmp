@@ -1,0 +1,39 @@
+<aura:component >
+    <aura:attribute name="navSelectItem" type="String"/>
+    <aura:handler name="leftNavEvent" event="c:leftnavigationSelectEvent" action="{!c.handleLeftNavigationEvent}"/>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-col slds-size_12-of-12 slds-align_absolute-center" style="background-color: #ff9a3c; height: 240px;">
+            <span style="color: white; font-size: 28px;">Banner</span>
+        </div>
+        <div class="slds-col slds-size_12-of-12" style="background-color: #195594; height: 70px; color: white; font-size: 16px;">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_4-of-12">
+                    MRA LOGO  
+                </div>
+                <div class="slds-col slds-size_8-of-12 .slds-align_absolute-left">
+                    <ul class="slds-list_horizontal slds-has-dividers_right slds-has-block-links_space" style="float: right;">
+                        <li class="slds-item">
+                            <a style=" color: white; font-size: 16px;" href="javascript:void(0);">Home</a>
+                        </li>
+                        <li class="slds-item">
+                            <a style=" color: white; font-size: 16px;" href="javascript:void(0);">Faq</a>
+                        </li>
+                        <li class="slds-item">
+                            <a style=" color: white; font-size: 16px;" href="javascript:void(0);">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slds-col slds-size_12-of-12">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_2-of-12">
+                    <c:leftnavigation />
+                </div>
+                <div class="slds-col slds-size_10-of-12">
+                    <c:rightcomponentRender currentContent="{!v.navSelectItem}"/>                    
+                </div>                
+            </div>
+        </div>
+    </div> 
+</aura:component>

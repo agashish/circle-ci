@@ -1,0 +1,24 @@
+<aura:component >
+    <ltng:require scripts="{!$Resource.jquery}"
+                  afterScriptsLoaded="{! c._SCRIPT_LOADING_}" />
+    <aura:attribute name="tasksList" type="String[]" />
+    <div class="slds-grid slds-grid_vertical-align-center">
+      <div class="slds-col">
+          <div class="slds-m-around_medium">
+          	<div class="slds-form-element">
+              <label class="slds-form-element__label" for="task-input">
+                <abbr class="slds-required" title="required">* </abbr>Create Task</label>
+              <div class="slds-form-element__control">
+                <input type="text" id="task-input" placeholder="Type Here..." required="" class="slds-input" />
+              </div>
+            </div>
+          </div>        
+      </div>
+      <div class="slds-col">
+          <div class="slds-m-around_medium slds-p-top_large">
+          	<!-- <c:TodoCreateButton /> -->
+              <button class="slds-button slds-button_neutral" onclick="{!c._CREATE_TASK_}">Create Task</button>
+          </div>        
+      </div>
+    </div>
+</aura:component>

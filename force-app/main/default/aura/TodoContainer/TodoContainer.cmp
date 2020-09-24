@@ -1,0 +1,8 @@
+<aura:component >
+    
+    <aura:handler event="c:TodoDeleteEvent" action="{!c.deleteRow}" />
+    <aura:attribute name="tasks" type="String[]"/>
+	<div class="slds-text-heading_large">Basic Task App</div>
+    <c:TodoCreateTaskContainer tasksList="{!v.tasks}" />    
+    <c:TodoTaskContainer tasksList="{!v.tasks}" />
+</aura:component>

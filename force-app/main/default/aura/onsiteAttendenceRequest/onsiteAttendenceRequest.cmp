@@ -1,0 +1,218 @@
+<aura:component>
+    
+    <aura:attribute name="reason_text" type="String" />
+    
+    <!-- FOR RADIO TYPE -->
+    <aura:attribute name="optionsStartDate" type="List" default="[
+                                                        {'label': 'First Half', 'value': '1'},
+                                                        {'label': 'Second Half', 'value': '2'}
+                                                        ]"/>
+    <aura:attribute name="optionsEndDate" type="List" default="[
+                                                        {'label': 'First Half', 'value': '1'},
+                                                        {'label': 'Second Half', 'value': '2'}
+                                                        ]"/>
+    
+    <aura:attribute name="valueStart" type="String" default=""/>
+    <aura:attribute name="valueEnd" type="String" default=""/>
+    <aura:attribute name="myVal" type="String" />
+    <aura:attribute name="otherOption" type="Boolean" default="false" />
+    
+    <!-- SET DEFAULT -->
+    <aura:attribute name="leaveRequest" type="LeaveRequest__c" />
+    <aura:handler name="init" value="{! this}" action="{!c.init}" />
+    <aura:attribute name="column" type="List"/>
+    <aura:attribute name="approvedLeaves" type="List"/>
+    <aura:attribute name="pendingLeaves" type="List"/>
+    
+    <lightning:tabset selectedTabId="attendence_request">
+        <lightning:tab label="Attendence Request" id="attendence_request">            
+            <lightning:layout>
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_4-of-12">
+                                        Select Employee
+                                    </div>
+                                    <div class="slds-col slds-size_8-of-12">
+                                        <lightning:input type="text" name="input1" variant="label-hidden" placeholder="Select Employee" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12"></div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_4-of-12">
+                                                Attendence Type
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12">
+                                                <lightning:select aura:id="requestType" name="select1" onchange="{! c.openOption}" label="How many tickets?" variant="label-hidden" required="true">
+                                                    <option value="">Choose Request Type</option>
+                                                    <option value="test">Test</option>
+                                                    <option value="test2">Test2</option>
+                                                    <option value="test33">Test3</option>
+                                                </lightning:select>
+                                                <aura:if isTrue="{!v.otherOption}"> 
+                                                    <div class="slds-col slds-size_12-of-12"><br /></div>
+                                                   	<lightning:input type="text" name="otherOptionText" variant="label-hidden" placeholder="Other Option" />
+                                                </aura:if>
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_2-of-12">
+                                                Request Date
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12">
+                                                <lightning:input type="date" name="request_date" variant="label-hidden" />                                                
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!--START DATE -->
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_4-of-12">
+                                                Start Date<span style="color: red">*</span>
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12">
+                                                <lightning:input type="date" name="request_date" variant="label-hidden" />
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    
+                    <!--END DATE -->
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_4-of-12">
+                                                End Date<span style="color: red">*</span>
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12">
+                                                <lightning:input type="date" name="request_date" variant="label-hidden" />
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <!--REASON -->
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_4-of-12">
+                                                Reason<span style="color: red">*</span>
+                                            </div>
+                                            <div class="slds-col slds-size_8-of-12">
+                                                <lightning:inputRichText value="{!v.myVal}" placeholder="Type something interesting"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12"></div>
+                        </div>
+                    </div>
+                    
+                    <!--APPROVAL AUTHORITY -->
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_4-of-12">
+                                                Approval Authority<span style="color: red">*</span>
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12">
+                                                <lightning:input
+                                                                 name="approval_authority"
+                                                                 label="This is a search input with a hidden label. The label is still required for accessibility reasons"
+                                                                 type="search"
+                                                                 variant="label-hidden"
+                                                                 />
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12"></div>
+                        </div>
+                    </div>
+
+					<!--BUTTON TO ADD AND CHECK -->
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_4-of-12"></div>
+                                            <div class="slds-col slds-size_4-of-12">
+                                                <button class="slds-button slds-button_brand">Send</button>
+                                                <button class="slds-button slds-button_destructive">Cancel</button>
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12"></div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12"></div>
+                        </div>
+                    </div>                        
+                </div>               
+            </lightning:layout>
+        </lightning:tab>
+        <lightning:tab label="Attendence Cancellation" id="attendence_cancel">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_12-of-12">                 
+                	<c:leaveCancelation heading="Pending Leaves" column="{! v.column}" data="{! v.pendingLeaves}" />
+                </div>
+            </div>
+            <div class="slds-col slds-size_12-of-12"><br /></div>
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_12-of-12">
+                	<c:leaveCancelation heading="Approved Leaves" column="{! v.column}" data="{! v.approvedLeaves}" />
+                </div>
+            </div>          
+        </lightning:tab>
+    </lightning:tabset>
+</aura:component>

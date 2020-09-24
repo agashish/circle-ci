@@ -1,0 +1,46 @@
+<apex:component controller="SearchAccount">
+<script>
+    function showInput(id, name, current) {
+        
+        alert(id);
+    }
+    
+    function showText(id, name, current) {
+        
+    }
+</script>
+    <apex:attribute name="accountRecordsData" type="Account[]" required="true" description="Text"/> 
+    <apex:attribute name="isAccess" type="boolean" default="false" required="true" description="boolean"/> 
+    <apex:outputText value="{!isAccess}"/>
+        
+        <apex:actionFunction name="needToBeShow" action="{!isAccess = false}"/>   
+        <apex:pageblock id="accountList">  
+             <apex:pageblockTable value="{!accountRecordsData}" var="acc">
+                 <apex:column >
+                    <apex:inputCheckbox value="{!acc.id}" onchange="showInput('{!acc.id}','{!acc.name}', this)" rendered="{!IF(isAccess, true, false)}" />
+                    <apex:facet name="header">Id</apex:facet>
+                </apex:column>
+                <apex:column >
+                
+                    <apex:outputLabel html-class="outputText">
+                        <apex:outputField value="{!acc.Name}" id="outputId"/>
+                    </apex:outputLabel>
+                    
+                    <apex:outputLabel html-class="inputText">
+                        <apex:inputField value="{!acc.Name}" id="inputId" />
+                    </apex:outputLabel>
+                                       
+                    <apex:facet name="header">Name</apex:facet>
+                </apex:column>
+                <apex:column >
+                    <apex:outputField value="{!acc.Site}"/>
+                    <apex:facet name="header">Site</apex:facet>
+                </apex:column>
+                <apex:column >
+                    <apex:outputField value="{!acc.Description}"/>
+                    <apex:facet name="header">Description</apex:facet>
+                </apex:column>
+             </apex:pageblockTable>   
+         <!-- <apex:inlineEditSupport /> -->
+        </apex:pageblock>
+</apex:component>

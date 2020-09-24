@@ -1,0 +1,127 @@
+<aura:component >
+    <aura:attribute name="openPopupForFlexTimmings" type="Boolean" default="false" />
+    <div class="slds-col slds-size_6-of-12">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_2-of-12"></div>
+            <div class="slds-col slds-size_6-of-12">
+                <button type="button" class="slds-button slds-button_outline-brand" onclick="{! c.openFlexPopup}">Show Flexi Weekends</button>
+            </div>
+            <div class="slds-col slds-size_4-of-12">                                       
+                <aura:if isTrue="{! v.openPopupForFlexTimmings}">
+                    <!-- <c:popupForFlexTime /> -->
+                    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"	>
+                                    
+                                    <span class="slds-assistive-text">Close</span>
+                                </button>
+                                <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Flexi Weekends</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                                    <thead>
+                                        <tr class="slds-line-height_reset">
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate" title="Opportunity Name">#</div>
+                                            </th>
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate" title="Account Name">Week Day</div>
+                                            </th>
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate" title="Close Date">Working Day</div>
+                                            </th>                                                                    
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="slds-hint-parent">                                                                    
+                                            <td data-label="Account Name">
+                                                <div class="slds-truncate" title="Cloudhub">1</div>
+                                            </td>
+                                            <td data-label="Close Date">
+                                                <div class="slds-truncate" title="4/14/2015">Monday</div>
+                                            </td>
+                                            <td data-label="Prospecting">
+                                                <div class="slds-truncate" title="Prospecting">YES</div>
+                                            </td>                                                                    
+                                        </tr>
+                                        <tr class="slds-hint-parent">                                                                    
+                                            <td data-label="Account Name">
+                                                <div class="slds-truncate" title="Cloudhub">2</div>
+                                            </td>
+                                            <td data-label="Close Date">
+                                                <div class="slds-truncate" title="4/14/2015">Tuesday</div>
+                                            </td>
+                                            <td data-label="Prospecting">
+                                                <div class="slds-truncate" title="Prospecting">YES</div>
+                                            </td>                                                                    
+                                        </tr>
+                                        <tr class="slds-hint-parent">                                                                    
+                                            <td data-label="Account Name">
+                                                <div class="slds-truncate" title="Cloudhub">3</div>
+                                            </td>
+                                            <td data-label="Close Date">
+                                                <div class="slds-truncate" title="4/14/2015">Wednesday</div>
+                                            </td>
+                                            <td data-label="Prospecting">
+                                                <div class="slds-truncate" title="Prospecting">YES</div>
+                                            </td>                                                                    
+                                        </tr>
+                                        <tr class="slds-hint-parent">                                                                    
+                                            <td data-label="Account Name">
+                                                <div class="slds-truncate" title="Cloudhub">4</div>
+                                            </td>
+                                            <td data-label="Close Date">
+                                                <div class="slds-truncate" title="4/14/2015">Thursday</div>
+                                            </td>
+                                            <td data-label="Prospecting">
+                                                <div class="slds-truncate" title="Prospecting">YES</div>
+                                            </td>                                                                    
+                                        </tr>
+                                        <tr class="slds-hint-parent">                                                                    
+                                            <td data-label="Account Name">
+                                                <div class="slds-truncate" title="Cloudhub">5</div>
+                                            </td>
+                                            <td data-label="Close Date">
+                                                <div class="slds-truncate" title="4/14/2015">Friday</div>
+                                            </td>
+                                            <td data-label="Prospecting">
+                                                <div class="slds-truncate" title="Prospecting">YES</div>
+                                            </td>                                                                    
+                                        </tr>
+                                        <tr class="slds-hint-parent" style="background-color: red;">                                                                    
+                                            <td data-label="Account Name">
+                                                <div class="slds-truncate" title="Cloudhub">6</div>
+                                            </td>
+                                            <td data-label="Close Date">
+                                                <div class="slds-truncate" title="4/14/2015">Saturday</div>
+                                            </td>
+                                            <td data-label="Prospecting">
+                                                <div class="slds-truncate" title="Prospecting">YES</div>
+                                            </td>                                                                    
+                                        </tr>
+                                        <tr class="slds-hint-parent" style="background-color: #E5D658;">                                                                    
+                                            <td data-label="Account Name">
+                                                <div class="slds-truncate" title="Cloudhub">7</div>
+                                            </td>
+                                            <td data-label="Close Date">
+                                                <div class="slds-truncate" title="4/14/2015">Sunday</div>
+                                            </td>
+                                            <td data-label="Prospecting">
+                                                <div class="slds-truncate" title="Prospecting">YES</div>
+                                            </td>                                                                    
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <footer class="slds-modal__footer slds-modal__footer_directional">                
+                                <button class="slds-button slds-button_brand" style="float: right" onclick="{! c.closePopup}">Cancel</button>
+                            </footer>
+                        </div>      
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </aura:if> 
+            </div>
+        </div>                                
+    </div>
+</aura:component>

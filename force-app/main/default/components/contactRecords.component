@@ -1,0 +1,22 @@
+<apex:component controller="SearchAccount">
+    <apex:attribute name="contactRecordsData" type="Contact[]" description="Contact Records accordign to Account Id" required="true" />
+      <apex:pageblock >                        
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>LastName </th>
+              </tr>
+            </thead> 
+            <tbody> 
+            {!contactRecordsData}
+                 <apex:repeat value="{!contactRecordsData}" var="contact">
+                     <tr>
+                         <td>{!contact.Id}</td>
+                         <td>{!contact.LastName}</td>
+                     </tr>
+                 </apex:repeat>
+            </tbody>
+          </table>
+    </apex:pageblock>
+</apex:component>

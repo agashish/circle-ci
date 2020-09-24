@@ -1,0 +1,541 @@
+<aura:component controller="AddLeaveRequest">
+    <aura:handler name="leaveUpdateEvent" event="c:leaveUpdateEvent" action="{! c.init}" />
+    <!--<aura:handler name="leftNavEvent" event="c:leftnavigationSelectEvent" action="{!c.handleLeftNavigationEvent}"/>-->
+    <aura:attribute name="reason_text" type="String" />
+    <!-- FOR RADIO TYPE -->
+    <aura:attribute name="optionsStartDate" type="List" default="[
+                                                                 {'label': 'First Half', 'value': 'First Half'},
+                                                                 {'label': 'Second Half', 'value': 'Second Half'}
+                                                                 ]"/>
+    <aura:attribute name="optionsEndDate" type="List" default="[
+                                                               {'label': 'First Half', 'value': 'First Half'},
+                                                               {'label': 'Second Half', 'value': 'Second Half'}
+                                                               ]"/>
+    
+    <aura:attribute name="leaveTypes" type="List" default="[
+                                                           {'label': 'Earned Leave', 'value': 'Earned Leave'},
+                                                           {'label': 'General Leave', 'value': 'General Leave'}
+                                                           ]"/>
+    
+    <aura:attribute name="valueStart" type="String" default=""/>
+    <aura:attribute name="valueEnd" type="String" default=""/>
+    <aura:attribute name="leaveTypeSelect" type="String" default=""/>
+    <aura:attribute name="myVal" type="String" />
+    <aura:attribute name="openLeaveSection" type="Boolean" default="false" />
+    <aura:attribute name="noOfDaysCalculated" type="Integer" default="0" />
+    
+    <aura:attribute name="user_gen_leave" type="Integer" default="0"/>
+    <aura:attribute name="user_earn_leave" type="Integer" default="0"/>
+    
+    <aura:attribute name="earnLeaveStartDateValue" type="string" />    
+    <aura:attribute name="earnLeaveEndDateValue" type="string" />    
+    <aura:attribute name="earnedLeaveDays" type="Integer" default="0"/>  
+    
+    <aura:attribute name="genLeaveStartDateValue" type="string" />    
+    <aura:attribute name="genLeaveEndDateValue" type="string" />    
+    <aura:attribute name="genLeaveDays" type="Integer" default="0"/>
+    <aura:attribute name="leaveTypeList" type="List" default=""/>    
+    <!-- SET DEFAULT -->
+    <aura:attribute 
+                    name="leaveRequestObject" 
+                    type="LeaveRequest__c"
+                    default="{
+                             'sobjectType': 'LeaveRequest__c',
+                             'leave_start_date__c': '',
+                             'leave_end_date__c': '',
+                             'Name': '',  
+                             'No_of_days__c': '',
+                             'reason__c': '',
+                             'Request_date__c': '',
+                             'Leave_Type__c': 0,
+                             'Manager_Id__c': '',
+                             'Select_Employee__c' : '',
+                             'select_employee_id__c': '',
+                             'Manager_Name__c': '',
+                             'Start_Half_Day__c': '',
+                             'End_Half_Day__c': '',
+                             'Leave_Status__c': 'Pending',
+                             'Leave_Type_End_Date__c': '',
+                             'Leave_Type_Start_Date__c': '',
+                             'Start_Half_Day_Type__c': '',
+                             'End_Half_Day_Type__c': '',
+                             }" />
+    <aura:handler name="init" value="{! this}" action="{!c.init}" />
+    <aura:attribute name="column" type="List"/>    
+    <aura:attribute name="approvedLeaves" type="List"/>
+    <aura:attribute name="pendingLeaves" type="List"/>    
+    <lightning:tabset selectedTabId="leave_request">
+        <lightning:tab label="Leave Request" id="leave_request">            
+            <lightning:layout>
+                <form>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_6-of-12">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_4-of-12">
+                                            {! $Label.c.Select_Employee}
+                                        </div>
+                                        <div class="slds-col slds-size_8-of-12">
+                                            <lightning:input 
+                                                             type="text" 
+                                                             aura:id="leave_form" 
+                                                             value="{!v.leaveRequestObject.Select_Employee__c + ' - ' + v.leaveRequestObject.select_employee_id__c}" 
+                                                             disabled="true"
+                                                             name="input1"  
+                                                             variant="label-hidden"  
+                                                             placeholder="Select Employee" /> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_6-of-12"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- FLESIBLE TIMMINGS -->
+                        <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_6-of-12">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_12-of-12">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_4-of-12">
+                                                    Request Date
+                                                </div>
+                                                <div class="slds-col slds-size_4-of-12">
+                                                    <lightning:input aura:id="leave_form" disabled="true" value="{!v.leaveRequestObject.Request_date__c}" type="date" name="request_date" variant="label-hidden" />
+                                                </div>
+                                                <div class="slds-col slds-size_4-of-12"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <c:FlexibleComponent />
+                            </div>
+                        </div>
+                        
+                        <!--START DATE -->
+                        <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_6-of-12">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_12-of-12">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_4-of-12">
+                                                    Start Date<span style="color: red">*</span>
+                                                </div>
+                                                <div class="slds-col slds-size_4-of-12">
+                                                    <lightning:input
+                                                                     aura:id="leave_form"
+                                                                     value="{!v.leaveRequestObject.leave_start_date__c}"
+                                                                     type="date" name="start_date" variant="label-hidden" 
+                                                                     
+                                                                     />
+                                                </div>
+                                                <div class="slds-col slds-size_4-of-12"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_6-of-12">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_12-of-12">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_1-of-12">
+                                                    Half Day
+                                                </div>
+                                                <!--<div class="slds-col slds-size_1-of-12">
+                                                    <lightning:input
+                                                                     type="checkbox" 
+                                                                     label="Basic option" 
+                                                                     variant="label-hidden" 
+                                                                     name="input1"
+                                                                     id="start_date" />
+                                                </div>-->
+                                                <div class="slds-col slds-size_8-of-12">
+                                                    <lightning:radioGroup name="radioButtonGroupRequiredStartdate"
+                                                                          label="Radio Button Group"
+                                                                          options="{! v.optionsStartDate }"
+                                                                          value="{! v.leaveRequestObject.Start_Half_Day_Type__c }"
+                                                                          type="button"
+                                                                          variant="label-hidden"
+                                                                          required="false"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!--END DATE -->
+                        <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_6-of-12">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_12-of-12">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_4-of-12">
+                                                    End Date<span style="color: red">*</span>
+                                                </div>
+                                                <div class="slds-col slds-size_4-of-12">
+                                                    <lightning:input 
+                                                                     aura:id="leave_form"
+                                                                     onchange="{! c.getDays}"
+                                                                     value="{!v.leaveRequestObject.leave_end_date__c}"
+                                                                     type="date" name="end_date" variant="label-hidden" 
+                                                                     id="end_date"
+                                                                     />
+                                                </div>
+                                                <div class="slds-col slds-size_4-of-12"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_6-of-12">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_12-of-12">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_1-of-12">
+                                                    Half Day
+                                                </div>
+                                                <!--<div class="slds-col slds-size_1-of-12">
+                                                    <lightning:input 
+                                                                     type="checkbox" 
+                                                                     label="Basic option" 
+                                                                     variant="label-hidden" 
+                                                                     name="input1"/>
+                                                </div>-->
+                                                <div class="slds-col slds-size_8-of-12">
+                                                    <lightning:radioGroup name="radioButtonGroupRequiredEndDate"
+                                                                          label="Radio Button Group"
+                                                                          options="{! v.optionsStartDate }"
+                                                                          value="{! v.leaveRequestObject.End_Half_Day_Type__c }"
+                                                                          type="button"
+                                                                          variant="label-hidden"
+                                                                          required="false"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!--NO OF DAYS -->
+                        <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_6-of-12">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_12-of-12">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_4-of-12">
+                                                    No. of days<span style="color: red">*</span>
+                                                </div>
+                                                <div class="slds-col slds-size_4-of-12">
+                                                    <ui:outputtext value="{! v.noOfDaysCalculated}" />
+                                                </div>
+                                                <div class="slds-col slds-size_4-of-12"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_6-of-12"></div>
+                            </div>
+                        </div>
+                        
+                        <!--  LEAVES TYPES
+                        <aura:if isTrue="{! v.openLeaveSection}">
+                            <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_6-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_12-of-12">
+                                                <div class="slds-grid slds-wrap">
+                                                    <div class="slds-col slds-size_4-of-12">
+                                                        Leave Type<span style="color: red">*</span>
+                                                    </div>
+                                                    <div class="slds-col slds-size_4-of-12">
+                                                        <lightning:radioGroup name="chooseLeaveType"
+                                                                              label="Radio Button Group"
+                                                                              options="{! v.leaveTypes }"
+                                                                              value="{! v.leaveRequestObject.Leave_Type__c }"
+                                                                              type="button"
+                                                                              variant="label-hidden"
+                                                                              required="true"/>
+                                                    </div>
+                                                    <div class="slds-col slds-size_4-of-12"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_6-of-12"></div>
+                                </div>
+                            </div>
+                        </aura:if> -->     
+                        
+                        <!--  LEAVES TYPES -->
+                        <aura:if isTrue="{! v.openLeaveSection}">
+                            <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                                    <thead>
+                                        <tr class="slds-line-height_reset">
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate" title="Opportunity Name">Leave Type</div>
+                                            </th>
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate" title="Account Name">Start Date</div>
+                                            </th>
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate" title="Close Date">End Date</div>
+                                            </th>
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate" title="Stage">Days</div>
+                                            </th>
+                                            <th class="" scope="col">
+                                                <div class="slds-truncate" title="Confidence">Action</div>
+                                            </th>                                        
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="slds-hint-parent">                                        
+                                            <td data-label="Account Name">
+                                                <div class="slds-truncate" title="">Earned Leave</div>
+                                            </td>
+                                            <td data-label="Close Date">
+                                                <div class="slds-grid slds-wrap">
+                                                    <div class="slds-col slds-size_6-of-12">
+                                                        <div class="slds-truncate" title="">
+                                                            <lightning:input 
+                                                                             aura:id="leave_form"
+                                                                             type="date"
+                                                                             name="earnedleaveStartDate"
+                                                                             value="{! v.earnLeaveStartDateValue}"
+                                                                             variant="label-hidden"
+                                                                             id="earned_leave_start_date"
+                                                                             onchange="{! c.dayCalculateOnDateType}"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_6-of-12"></div>
+                                                </div>                                            
+                                            </td>
+                                            <td data-label="Prospecting">
+                                                <div class="slds-grid slds-wrap">
+                                                    <div class="slds-col slds-size_6-of-12">
+                                                        <div class="slds-truncate" title="">
+                                                            <lightning:input 
+                                                                             aura:id="leave_form"
+                                                                             onchange="{! c.dayCalculateOnDateType}"                                                                             
+                                                                             type="date" 
+                                                                             name="earnedleaveEndDate" 
+                                                                             value="{! v.earnLeaveEndDateValue}"
+                                                                             variant="label-hidden" 
+                                                                             id="earned_leave_end_date"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_6-of-12"></div>
+                                                </div>                                            
+                                            </td>
+                                            <td data-label="Confidence">
+                                                <div class="slds-truncate" title="">
+                                                    <ui:outputtext value="{! v.earnedLeaveDays}" />
+                                                </div>
+                                            </td>
+                                            <td data-label="Amount">
+                                                <div class="slds-truncate" title="">Remove</div>
+                                            </td>
+                                        </tr>                                        
+                                        <tr class="slds-hint-parent">                                        
+                                            <td data-label="Account Name">
+                                                <div class="slds-truncate" title="">General Leave</div>
+                                            </td>
+                                            <td data-label="Close Date">
+                                                <div class="slds-grid slds-wrap">
+                                                    <div class="slds-col slds-size_6-of-12">
+                                                        <div class="slds-truncate" title="">
+                                                            <lightning:input 
+                                                                             aura:id="leave_form" 
+                                                                             type="date" 
+                                                                             value="{! v.genLeaveStartDateValue}"
+                                                                             name="earnedleaveGenStartDate" 
+                                                                             variant="label-hidden"
+                                                                             onchange="{! c.dayCalculateOnDateType}"
+                                                                             id="gen_leave_start_date"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_6-of-12"></div>
+                                                </div>
+                                            </td>
+                                            <td data-label="Prospecting">
+                                                <div class="slds-grid slds-wrap">
+                                                    <div class="slds-col slds-size_6-of-12">
+                                                        <div class="slds-truncate" title="">
+                                                            <lightning:input 
+                                                                             aura:id="leave_form"
+                                                                             type="date" 
+                                                                             value="{! v.genLeaveEndDateValue}"
+                                                                             name="earnedleaveGenEndDate" 
+                                                                             variant="label-hidden"
+                                                                             onchange="{! c.dayCalculateOnDateType}"
+                                                                             id="gen_leave_end_date"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_6-of-12"></div>
+                                                </div>
+                                            </td>
+                                            <td data-label="Confidence">
+                                                <div class="slds-truncate" title="">
+                                                    <ui:outputtext value="{! v.genLeaveDays}" />
+                                                </div>
+                                            </td>
+                                            <td data-label="Amount">
+                                                <div class="slds-truncate" title="">Remove</div>
+                                            </td>
+                                        </tr>                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                        </aura:if>
+                        
+                        <!--REASON -->
+                        <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_6-of-12"> 
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_12-of-12">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_4-of-12">
+                                                    Reason<span style="color: red">*</span>
+                                                </div>
+                                                <div class="slds-col slds-size_8-of-12">
+                                                    <!--<lightning:inputRichText 
+                                                                             aura:id="leave_form" 
+                                                                             value="{!v.leaveRequestObject.reason__c}" 
+                                                                             placeholder="Type something interesting"/>-->
+                                                    <lightning:textarea aura:id="leave_form" 
+                                                                        value="{!v.leaveRequestObject.reason__c}" 
+                                                                        placeholder="Type something interesting"
+                                                                        variant="label-hidden"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_6-of-12"></div>
+                            </div>
+                        </div>
+                        
+                        <!--APPROVAL AUTHORITY -->
+                        <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_6-of-12">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_12-of-12">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_4-of-12">
+                                                    Approval Authority<span style="color: red">*</span>
+                                                </div>
+                                                <div class="slds-col slds-size_4-of-12">
+                                                    <lightning:input
+                                                                     name="approval_authority"
+                                                                     label="This is a search input with a hidden label. The label is still required for accessibility reasons"
+                                                                     type="search"
+                                                                     variant="label-hidden"
+                                                                     disabled="true"
+                                                                     value="{!v.leaveRequestObject.Manager_Name__c + '-' + v.leaveRequestObject.Manager_Id__c}"
+                                                                     />
+                                                </div>
+                                                <div class="slds-col slds-size_4-of-12"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_6-of-12"></div>
+                            </div>
+                        </div>
+                        
+                        <!--BUTTON TO ADD AND CHECK -->
+                        <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_6-of-12">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_12-of-12">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_4-of-12"></div>
+                                                <div class="slds-col slds-size_4-of-12">
+                                                    <!--<button class="slds-button slds-button_brand" onclick="{!c.addLeaveOnRequest}">Add Leave Request</button>
+                                                    <button class="slds-button slds-button_destructive">Cancel</button>-->
+                                                    <lightning:button label="Add Leave" 
+                                                                      class="slds-m-top--medium"
+                                                                      variant="brand"
+                                                                      onclick="{!c.addLeaveOnRequest}"/>
+                                                    
+                                                    <lightning:button label="Cancel" 
+                                                                      class="slds-m-top--medium slds-button slds-button_destructive"
+                                                                      variant="brand"
+                                                                      onclick="{!c.addLeaveOnRequest}"/>
+                                                </div>
+                                                <div class="slds-col slds-size_4-of-12"></div>
+                                            </div> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_6-of-12"></div>
+                            </div>
+                        </div>                        
+                    </div>
+                </form>                               
+            </lightning:layout>
+            <div class="slds-col slds-size_12-of-12">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size_6-of-12">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Opportunity Name">Opportunity Name</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Account Name">Account Name</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="slds-hint-parent">
+                                    <td data-label="Account Name">
+                                        <div class="slds-truncate" title="Cloudhub">General Leave</div>
+                                    </td>
+                                    <td data-label="Close Date">
+                                        <div class="slds-truncate" title="">{! v.user_gen_leave}</div>
+                                    </td>
+                                </tr>
+                                <tr class="slds-hint-parent">
+                                    <td data-label="Account Name">
+                                        <div class="slds-truncate" title="Cloudhub">Earned Leave</div>
+                                    </td>
+                                    <td data-label="Close Date">
+                                        <div class="slds-truncate" title="4/14/2015">{! v.user_earn_leave}</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12"></div>
+                </div>
+            </div>
+        </lightning:tab>
+        <lightning:tab label="Leave Cancellation" id="leave_cancel">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_12-of-12">                 
+                    <c:leaveCancelation heading="Pending Leaves" column="{! v.column}" data="{! v.pendingLeaves}" />
+                </div>
+            </div>
+            <div class="slds-col slds-size_12-of-12"><br /></div>
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_12-of-12">
+                    <c:leaveCancelation heading="Approved Leaves" column="{! v.column}" data="{! v.approvedLeaves}" />
+                </div>
+            </div>          
+        </lightning:tab>
+    </lightning:tabset>
+</aura:component>

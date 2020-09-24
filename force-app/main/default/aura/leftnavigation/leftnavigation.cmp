@@ -1,0 +1,33 @@
+<aura:component>
+    <aura:attribute name="selectedMenuItemOnLoad" type="String"/>
+    <aura:handler name="init" value="{! this}" action="{!c.init}" />
+    <aura:registerEvent name="leftNavEvent" type="c:leftnavigationSelectEvent"/>
+    <div>
+        <lightning:layout>
+            <lightning:layoutItem>
+                <lightning:verticalNavigation
+					selectedItem="{! v.selectedMenuItemOnLoad}"                                              
+                    onselect="{! c.selectLeftMenuToOpen }"
+                    class="navigation">
+                    
+                    <lightning:verticalNavigationSection label="Leave and Attendence">
+                        <lightning:verticalNavigationItemIcon
+                                                              label="Leave Request"
+                                                              name="leaverequestTabs"
+                                                              iconName="utility:clock"/>
+                           
+                        <lightning:verticalNavigationItemIcon
+                                                              label="Onsite Attendence Request"
+                                                              name="onsiteAttendenceRequest"
+                                                              iconName="utility:user"/>
+                        
+                        <lightning:verticalNavigationItemIcon
+                                label="Work From Home Request"
+                                name="workfromhomeComponent"
+                                iconName="utility:user"/>                                                              
+                    </lightning:verticalNavigationSection>
+                </lightning:verticalNavigation>
+            </lightning:layoutItem>
+        </lightning:layout>        
+    </div>
+</aura:component>

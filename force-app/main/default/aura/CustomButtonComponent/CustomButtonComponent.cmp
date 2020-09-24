@@ -1,0 +1,8 @@
+<aura:component >
+    <aura:attribute name="alertMessage" type="String" default="No message string passed."/>
+    <aura:attribute name="btnLabel" type="String" default="No Label" />
+    <aura:attribute name="actionName" type="String"/>
+	<button onclick="{!c.myAction}">
+        <ui:outputtext value="{!v.btnLabel}" />
+    </button>
+</aura:component>

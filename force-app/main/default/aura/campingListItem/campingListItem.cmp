@@ -1,0 +1,24 @@
+<aura:component>
+    <aura:attribute name="item" type="Camping_Item__c" />
+
+    <lightning:card title="{!v.item.Name}" iconName="standard:scan_card"
+                    class="{!v.item.Packed__c ?
+                           'slds-theme--success' : ''}">
+        
+        <p class="slds-text-heading--medium slds-p-horizontal--small">
+           Amount: <lightning:formattedNumber value="{!v.item.Amount__c}" style="currency"/>
+        </p>
+        <p class="slds-p-horizontal--small">
+            Quantity: {!v.item.Quantity__c}
+        </p>
+        <p>
+            <lightning:input type="toggle" 
+                             label="Packed?"
+                             name="packed"
+                             class="slds-p-around--small"
+                             checked="{!v.item.Packed__c}"
+                             messageToggleActive="Yes"
+                             messageToggleInactive="No"/>
+        </p>
+    </lightning:card>
+</aura:component>

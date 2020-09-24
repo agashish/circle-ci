@@ -1,0 +1,5 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" >
+    <!--<aura:attribute name="campList" type="String[]" default="['Bug Spray','Bear Repellant','Goat Food']"/>-->
+    <c:campingHeader/>
+    <c:campingList/>
+</aura:component>

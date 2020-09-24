@@ -1,0 +1,12 @@
+<apex:component >
+  <apex:pageblock >
+        <apex:pageBlockSection columns="2">
+            <apex:pageblockSectionItem >
+                <apex:outputPanel >            
+                    <apex:outputLabel value="Account Name" for="account__name"/>
+                    <apex:inputtext id="accountName" html-class="accountName"/>
+                </apex:outputPanel>
+            </apex:pageblockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageblock>
+</apex:component>

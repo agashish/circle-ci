@@ -1,0 +1,46 @@
+<aura:component >
+    <aura:registerEvent name="addItem" type="c:addItemEvent" />
+    <aura:attribute name="newItem" type="Camping_Item__c" />
+	<div aria-labelledby="newexpenseform">
+                <!-- BOXED AREA -->
+                <fieldset class="slds-box slds-theme--default slds-container--small">
+                <legend id="newexpenseform" class="slds-text-heading--small 
+                  slds-p-vertical--medium">
+                  Add Camping
+                </legend>
+          
+                <!-- CREATE NEW EXPENSE FORM -->
+                <form class="slds-form--stacked">          
+                    <lightning:input aura:id="expenseform" label="Packing Name"
+                                     name="expensename"
+                                     value="{!v.newItem.Name}"
+                                     required="true"/> 
+                    <lightning:input type="number" aura:id="expenseform" label="Price"
+                                     name="expenseamount"
+                                     min="0.1"
+                                     formatter="currency"
+                                     step="0.01"
+                                     value="{!v.newItem.Price__c}"
+                                     messageWhenRangeUnderflow="Enter an amount that's at least $0.10."/>
+                    <lightning:input aura:id="expenseform" label="Quantity"
+                                     name="expensequantity"
+                                     value="{!v.newItem.Quantity__c}"
+                                     min="1"
+                                     messageWhenRangeUnderflow="Enter quantity that's at least 1 or greater"
+                                     required="true"
+                                     />
+                    <lightning:input type="checkbox" aura:id="expenseform" label="Packed?"  
+                                     name="packed"
+                                     checked="{!v.newItem.Packed__c}"/>
+                    
+                    <lightning:button label="Create Packing"  
+                                      class="slds-m-top--medium" 
+                                      variant="brand"
+                                      onclick="{!c.clickCreateItem}"/>
+                </form>
+                <!-- / CREATE NEW EXPENSE FORM -->
+          
+              </fieldset>
+              <!-- / BOXED AREA -->
+            </div>
+</aura:component>

@@ -1,0 +1,541 @@
+<aura:component>
+    
+    <aura:attribute name="reason_text" type="String" />
+    
+    <!-- FOR RADIO TYPE -->
+    <aura:attribute name="optionsStartDate" type="List" default="[
+                                                                 {'label': 'First Half', 'value': '1'},
+                                                                 {'label': 'Second Half', 'value': '2'}
+                                                                 ]"/>
+    <aura:attribute name="optionsEndDate" type="List" default="[
+                                                               {'label': 'First Half', 'value': '1'},
+                                                               {'label': 'Second Half', 'value': '2'}
+                                                               ]"/>
+    
+    <aura:attribute name="valueStart" type="String" default=""/>
+    <aura:attribute name="valueEnd" type="String" default=""/>
+    <aura:attribute name="myVal" type="String" />
+    <aura:attribute name="openLeaveSection" type="Boolean" default="false" />
+    
+    <!-- SET DEFAULT -->
+    <aura:attribute name="leaveRequest" type="LeaveRequest__c" />
+    <aura:handler name="init" value="{! this}" action="{!c.init}" />
+    <aura:attribute name="column" type="List"/>    
+    <aura:attribute name="approvedLeaves" type="List"/>
+    <aura:attribute name="pendingLeaves" type="List"/>
+    <aura:attribute name="openPopupForFlexTimmings" type="Boolean" default="false" />
+    <lightning:tabset selectedTabId="wfh_request">
+        <lightning:tab label="WFH Request" id="wfh_request">            
+            <lightning:layout>
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_4-of-12">
+                                        {! $Label.c.Select_Employee}
+                                    </div>
+                                    <div class="slds-col slds-size_8-of-12">
+                                        <!--<lightning:input type="text" name="input1" variant="label-hidden" placeholder="Select Employee" />-->
+                                        <ui:outputtext value="Logged User"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- FLESIBLE TIMMINGS -->
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_4-of-12">
+                                                Request Date
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12">
+                                                <lightning:input type="date" name="request_date" variant="label-hidden" />
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_2-of-12"></div>
+                                    <div class="slds-col slds-size_6-of-12">
+                                        <button class="slds-button slds-button_outline-brand" onclick="{! c.openFlexPopup}">Show Flexi Weekends</button>
+                                    </div>
+                                    <div class="slds-col slds-size_4-of-12">                                       
+                                        <aura:if isTrue="{! v.openPopupForFlexTimmings}">
+                                            <!-- <c:popupForFlexTime /> -->
+                                            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                                                <div class="slds-modal__container">
+                                                    <header class="slds-modal__header">
+                                                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"	>
+                                                            
+                                                            <span class="slds-assistive-text">Close</span>
+                                                        </button>
+                                                        <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Flexi Weekends</h2>
+                                                    </header>
+                                                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                                        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                                                            <thead>
+                                                                <tr class="slds-line-height_reset">
+                                                                    <th class="" scope="col">
+                                                                        <div class="slds-truncate" title="Opportunity Name">#</div>
+                                                                    </th>
+                                                                    <th class="" scope="col">
+                                                                        <div class="slds-truncate" title="Account Name">Week Day</div>
+                                                                    </th>
+                                                                    <th class="" scope="col">
+                                                                        <div class="slds-truncate" title="Close Date">Working Day</div>
+                                                                    </th>                                                                    
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr class="slds-hint-parent">                                                                    
+                                                                    <td data-label="Account Name">
+                                                                        <div class="slds-truncate" title="Cloudhub">1</div>
+                                                                    </td>
+                                                                    <td data-label="Close Date">
+                                                                        <div class="slds-truncate" title="4/14/2015">Monday</div>
+                                                                    </td>
+                                                                    <td data-label="Prospecting">
+                                                                        <div class="slds-truncate" title="Prospecting">YES</div>
+                                                                    </td>                                                                    
+                                                                </tr>
+                                                                <tr class="slds-hint-parent">                                                                    
+                                                                    <td data-label="Account Name">
+                                                                        <div class="slds-truncate" title="Cloudhub">2</div>
+                                                                    </td>
+                                                                    <td data-label="Close Date">
+                                                                        <div class="slds-truncate" title="4/14/2015">Tuesday</div>
+                                                                    </td>
+                                                                    <td data-label="Prospecting">
+                                                                        <div class="slds-truncate" title="Prospecting">YES</div>
+                                                                    </td>                                                                    
+                                                                </tr>
+                                                                <tr class="slds-hint-parent">                                                                    
+                                                                    <td data-label="Account Name">
+                                                                        <div class="slds-truncate" title="Cloudhub">3</div>
+                                                                    </td>
+                                                                    <td data-label="Close Date">
+                                                                        <div class="slds-truncate" title="4/14/2015">Wednesday</div>
+                                                                    </td>
+                                                                    <td data-label="Prospecting">
+                                                                        <div class="slds-truncate" title="Prospecting">YES</div>
+                                                                    </td>                                                                    
+                                                                </tr>
+                                                                <tr class="slds-hint-parent">                                                                    
+                                                                    <td data-label="Account Name">
+                                                                        <div class="slds-truncate" title="Cloudhub">4</div>
+                                                                    </td>
+                                                                    <td data-label="Close Date">
+                                                                        <div class="slds-truncate" title="4/14/2015">Thursday</div>
+                                                                    </td>
+                                                                    <td data-label="Prospecting">
+                                                                        <div class="slds-truncate" title="Prospecting">YES</div>
+                                                                    </td>                                                                    
+                                                                </tr>
+                                                                <tr class="slds-hint-parent">                                                                    
+                                                                    <td data-label="Account Name">
+                                                                        <div class="slds-truncate" title="Cloudhub">5</div>
+                                                                    </td>
+                                                                    <td data-label="Close Date">
+                                                                        <div class="slds-truncate" title="4/14/2015">Friday</div>
+                                                                    </td>
+                                                                    <td data-label="Prospecting">
+                                                                        <div class="slds-truncate" title="Prospecting">YES</div>
+                                                                    </td>                                                                    
+                                                                </tr>
+                                                                <tr class="slds-hint-parent" style="background-color: red;">                                                                    
+                                                                    <td data-label="Account Name">
+                                                                        <div class="slds-truncate" title="Cloudhub">6</div>
+                                                                    </td>
+                                                                    <td data-label="Close Date">
+                                                                        <div class="slds-truncate" title="4/14/2015">Saturday</div>
+                                                                    </td>
+                                                                    <td data-label="Prospecting">
+                                                                        <div class="slds-truncate" title="Prospecting">YES</div>
+                                                                    </td>                                                                    
+                                                                </tr>
+                                                                <tr class="slds-hint-parent" style="background-color: #E5D658;">                                                                    
+                                                                    <td data-label="Account Name">
+                                                                        <div class="slds-truncate" title="Cloudhub">7</div>
+                                                                    </td>
+                                                                    <td data-label="Close Date">
+                                                                        <div class="slds-truncate" title="4/14/2015">Sunday</div>
+                                                                    </td>
+                                                                    <td data-label="Prospecting">
+                                                                        <div class="slds-truncate" title="Prospecting">YES</div>
+                                                                    </td>                                                                    
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <footer class="slds-modal__footer slds-modal__footer_directional">                
+                                                        <button class="slds-button slds-button_brand" style="float: right" onclick="{! c.closePopup}">Cancel</button>
+                                                    </footer>
+                                                </div>      
+                                            </section>
+                                            <div class="slds-backdrop slds-backdrop_open"></div>
+                                        </aura:if> 
+                                    </div>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!--START DATE -->
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_4-of-12">
+                                                Start Date<span style="color: red">*</span>
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12">
+                                                <lightning:input onchange="{! c.onchangeDateRequest}" type="date" name="request_date" variant="label-hidden" />
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_1-of-12">
+                                                Half Day
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-12">
+                                                <lightning:input aura:id="startDateHalfDay" onchange="{! c.onchangeDateRequestCheckboxForHalfDay}" type="checkbox" label="Basic option" variant="label-hidden" name="input1"/>
+                                            </div>
+                                            <div class="slds-col slds-size_8-of-12">
+                                                <lightning:radioGroup name="radioButtonGroupRequiredStartdate"
+                                                                      label="Radio Button Group"
+                                                                      options="{! v.optionsStartDate }"
+                                                                      value="{! v.valueStart }"
+                                                                      type="button"
+                                                                      variant="label-hidden"
+                                                                      required="true"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!--END DATE -->
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_4-of-12">
+                                                End Date<span style="color: red">*</span>
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12">
+                                                <lightning:input type="date" name="request_date" variant="label-hidden" />
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_1-of-12">
+                                                Half Day
+                                            </div>
+                                            <div class="slds-col slds-size_1-of-12">
+                                                <lightning:input type="checkbox" label="Basic option" variant="label-hidden" name="input1"/>
+                                            </div>
+                                            <div class="slds-col slds-size_8-of-12">
+                                                <lightning:radioGroup name="radioButtonGroupRequiredEndDate"
+                                                                      label="Radio Button Group"
+                                                                      options="{! v.optionsStartDate }"
+                                                                      value="{! v.valueEnd }"
+                                                                      type="button"
+                                                                      variant="label-hidden"
+                                                                      required="true"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!--NO OF DAYS -->
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_4-of-12">
+                                                No. of days<span style="color: red">*</span>
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12">
+                                                <lightning:input type="date" name="request_date" variant="label-hidden" />
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12"></div>
+                        </div>
+                    </div>
+                    
+                    <!--  LEAVES TYPES -->
+                    <aura:if isTrue="{! v.openLeaveSection}">
+                        <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Opportunity Name">Leave Type</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Account Name">Start Date</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Close Date">End Date</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Stage">Days</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Confidence">Action</div>
+                                        </th>                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="slds-hint-parent">                                        
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate" title="">Earned Leave</div>
+                                        </td>
+                                        <td data-label="Close Date">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_6-of-12">
+                                                	<div class="slds-truncate" title="">
+                                                        <lightning:input type="date" name="earnedleaveStartDate" variant="label-hidden" />
+                                                    </div>
+                                                </div>
+                                                <div class="slds-col slds-size_6-of-12"></div>
+                                            </div>                                            
+                                        </td>
+                                        <td data-label="Prospecting">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_6-of-12">
+                                                	<div class="slds-truncate" title="">
+                                                        <lightning:input type="date" name="earnedleaveEndDate" variant="label-hidden" />
+                                                    </div>
+                                                </div>
+                                                <div class="slds-col slds-size_6-of-12"></div>
+                                            </div>                                            
+                                        </td>
+                                        <td data-label="Confidence">
+                                            <div class="slds-truncate" title="">0</div>
+                                        </td>
+                                        <td data-label="Amount">
+                                            <div class="slds-truncate" title="">Remove</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">                                        
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate" title="">Earned Leave LTA</div>
+                                        </td>
+                                        <td data-label="Close Date">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_6-of-12">
+                                                	<div class="slds-truncate" title="">
+                                                        <lightning:input type="date" name="earnedleaveLtaStartDate" variant="label-hidden" />
+                                                    </div>
+                                                </div>
+                                                <div class="slds-col slds-size_6-of-12"></div>
+                                            </div>
+                                        </td>
+                                        <td data-label="Prospecting">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_6-of-12">
+                                                	<div class="slds-truncate" title="">
+                                                        <lightning:input type="date" name="earnedleaveLtaEndDate" variant="label-hidden" />
+                                                    </div>
+                                                </div>
+                                                <div class="slds-col slds-size_6-of-12"></div>
+                                            </div>
+                                        </td>
+                                        <td data-label="Confidence">
+                                            <div class="slds-truncate" title="">0</div>
+                                        </td>
+                                        <td data-label="Amount">
+                                            <div class="slds-truncate" title="">Remove</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">                                        
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate" title="">General Leave</div>
+                                        </td>
+                                        <td data-label="Close Date">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_6-of-12">
+                                                	<div class="slds-truncate" title="">
+                                                        <lightning:input type="date" name="earnedleaveGenStartDate" variant="label-hidden" />
+                                                    </div>
+                                                </div>
+                                                <div class="slds-col slds-size_6-of-12"></div>
+                                            </div>
+                                        </td>
+                                        <td data-label="Prospecting">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_6-of-12">
+                                                	<div class="slds-truncate" title="">
+                                                        <lightning:input type="date" name="earnedleaveGenEndDate" variant="label-hidden" />
+                                                    </div>
+                                                </div>
+                                                <div class="slds-col slds-size_6-of-12"></div>
+                                            </div>
+                                        </td>
+                                        <td data-label="Confidence">
+                                            <div class="slds-truncate" title="">0</div>
+                                        </td>
+                                        <td data-label="Amount">
+                                            <div class="slds-truncate" title="">Remove</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">                                        
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate" title="">Leave Without Pay</div>
+                                        </td>
+                                        <td data-label="Close Date">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_6-of-12">
+                                                	<div class="slds-truncate" title="">
+                                                        <lightning:input type="date" name="earnedleaveWithoutStartDate" variant="label-hidden" />
+                                                    </div>
+                                                </div>
+                                                <div class="slds-col slds-size_6-of-12"></div>
+                                            </div>
+                                        </td>
+                                        <td data-label="Prospecting">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_6-of-12">
+                                                	<div class="slds-truncate" title="">
+                                                        <lightning:input type="date" name="earnedleaveWithoutEndDate" variant="label-hidden" />
+                                                    </div>
+                                                </div>
+                                                <div class="slds-col slds-size_6-of-12"></div>
+                                            </div>
+                                        </td>
+                                        <td data-label="Confidence">
+                                            <div class="slds-truncate" title="">0</div>
+                                        </td>
+                                        <td data-label="Amount">
+                                            <div class="slds-truncate" title="">Remove</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </aura:if>
+                    
+                    <!--REASON -->
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_4-of-12">
+                                                Reason<span style="color: red">*</span>
+                                            </div>
+                                            <div class="slds-col slds-size_8-of-12">
+                                                <lightning:inputRichText value="{!v.myVal}" placeholder="Type something interesting"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12"></div>
+                        </div>
+                    </div>
+                    
+                    <!--APPROVAL AUTHORITY -->
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_4-of-12">
+                                                Approval Authority<span style="color: red">*</span>
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12">
+                                                <lightning:input
+                                                                 name="approval_authority"
+                                                                 label="This is a search input with a hidden label. The label is still required for accessibility reasons"
+                                                                 type="search"
+                                                                 variant="label-hidden"
+                                                                 />
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12"></div>
+                        </div>
+                    </div>
+                    
+                    <!--BUTTON TO ADD AND CHECK -->
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_4-of-12"></div>
+                                            <div class="slds-col slds-size_4-of-12">
+                                                <button class="slds-button slds-button_brand">Add Leave Request</button>
+                                                <button class="slds-button slds-button_destructive">Cancel</button>
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12"></div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12"></div>
+                        </div>
+                    </div>                        
+                </div>               
+            </lightning:layout>
+        </lightning:tab>
+        <lightning:tab label="WFH Cancellation" id="wfh_cancel">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_12-of-12">                 
+                    <c:leaveCancelation heading="Pending Leaves" column="{! v.column}" data="{! v.pendingLeaves}" />
+                </div>
+            </div>
+            <div class="slds-col slds-size_12-of-12"><br /></div>
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_12-of-12">
+                    <c:leaveCancelation heading="Approved Leaves" column="{! v.column}" data="{! v.approvedLeaves}" />
+                </div>
+            </div>          
+        </lightning:tab>
+    </lightning:tabset>
+</aura:component>

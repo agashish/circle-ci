@@ -1,0 +1,16 @@
+<aura:component >    
+    <aura:attribute name="taskName" type="String" />
+    <aura:attribute name="rowIndex" type="Integer" />    
+	<tr class="slds-hint-parent">  
+      <td data-label="Task Name">
+        <!--<div class="slds-truncate" title="{!v.taskName}">{!v.taskName}</div>-->
+          <div class="slds-truncate" title="{!v.taskName}">
+              {!v.rowIndex}
+              <ui:outputText value="{!v.taskName}" />
+          </div>
+      </td>
+      <td data-label="Action">
+          <c:TodoDeleteButton rowIndex="{!v.rowIndex}"/>
+      </td>
+    </tr>	
+</aura:component>

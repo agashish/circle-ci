@@ -1,0 +1,61 @@
+<aura:component controller="AddLeaveRequest">
+    <aura:attribute name="heading" type="String" />   
+    <aura:attribute name="column" type="List" />
+    <aura:attribute name="data" type="List" />   
+    <aura:handler name="init" value="{! this}" action="{!c.init}" />
+    
+    <aura:registerEvent name="leaveUpdateEvent" type="c:leaveUpdateEvent"/>
+    <div class="slds-text-align_left slds-text-heading_medium">{!v.heading}</div>
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+        <thead>
+            <tr class="slds-line-height_reset"> 
+                <aura:iteration items="{! v.column}" var="heading">
+                    <th class="" scope="col">
+                    	<div class="slds-truncate" title="Opportunity Name">{!heading.label}</div>
+                    </th> 
+                </aura:iteration>
+            </tr>
+        </thead>
+        <tbody>
+            <aura:iteration items="{! v.data}" var="leaves">
+            	<tr class="slds-hint-parent">                
+                    <td data-label="Account Name">
+                        <div class="slds-truncate" title="Cloudhub">{!leaves.Leave_Type__c}</div>
+                    </td>
+                    <td data-label="Account Name">
+                        <div class="slds-truncate" title="Cloudhub">{!leaves.Request_date__c}</div>
+                    </td>
+                    <td data-label="Account Name">
+                        <div class="slds-truncate" title="Cloudhub">{!leaves.leave_start_date__c}</div>
+                    </td>
+                    <td data-label="Account Name">
+                        <div class="slds-truncate" title="Cloudhub">{!leaves.leave_end_date__c}</div>
+                    </td>
+                    <td data-label="Account Name">
+                        <div class="slds-truncate" title="Cloudhub"></div>
+                    </td>
+                    <td data-label="Account Name">
+                        <div class="slds-truncate" title="Cloudhub">{!leaves.No_of_days__c}</div>
+                    </td>
+                    <td data-label="Account Name">
+                        <div class="slds-truncate" title="Cloudhub">{!leaves.Manager_Name__c}</div>
+                    </td>
+                    <td data-label="Account Name">
+                        <div class="slds-truncate" title="Cloudhub">
+                            <aura:if isTrue="{! leaves.Leave_Status__c == 'Pending'}">
+                                <lightning:button 
+                                        onclick="{! c.leaveDeny}" 
+                                        class="slds-button slds-button_destructive"
+                                                  value="{! leaves}"
+                                >Remove</lightning:button>
+                            </aura:if>
+                            <aura:if isTrue="{! leaves.Leave_Status__c == 'Denied'}">
+                                Denied
+                            </aura:if>                            
+                        </div>
+                    </td>
+                </tr>
+            </aura:iteration>            
+        </tbody>
+    </table>
+</aura:component>

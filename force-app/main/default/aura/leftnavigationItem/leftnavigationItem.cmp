@@ -1,0 +1,39 @@
+<aura:component>
+    <aura:attribute name="selectedItem" type="String" />
+    <aura:attribute name="currentContent" type="String" />
+    <aura:attribute name="updatedCount" type="Integer" />
+    
+    <aura:handler name="init" value="{! this }" action="{! c.init }" />
+    
+    <div>
+        <lightning:layout>
+            <lightning:layoutItem>
+                <lightning:verticalNavigation
+                                              selectedItem="{! v.selectedItem }"
+                                              onselect="{! c.handleSelect }"
+                                              class="navigation">
+                    
+                    <lightning:verticalNavigationSection label="">
+                        <lightning:verticalNavigationItem clas="slds-nav-vertical__item slds-is-active" label="Leave Request" name="leave_request" />
+                        
+                        <lightning:verticalNavigationItemBadge
+                                                               label="Onsite Attendence Request"
+                                                               name="onsite_attendence_request"
+                                                               badgeCount="{! v.updatedCount }" />
+                        
+                        <lightning:verticalNavigationItem label="Office Time Request" name="office_time_request"  />
+                        <lightning:verticalNavigationItem label="Late Exempt Request" name="late_exempt_request" />
+                        <lightning:verticalNavigationItem label="Office Time For Team" name="office_time_for_team" />
+                        <lightning:verticalNavigationItem label="Mark Attendence" name="mark_attendence" />
+                        <lightning:verticalNavigationItem label="Leave Calender" name="leave_calender" />
+                        <lightning:verticalNavigationItem label="Officially Out Request" name="officially_out_request" />
+                        <lightning:verticalNavigationItem label="Work From Home Request" name="work_from_home_request" />
+                    </lightning:verticalNavigationSection>
+                    
+                </lightning:verticalNavigation>
+            </lightning:layoutItem>
+            
+            
+        </lightning:layout>
+    </div>
+</aura:component>

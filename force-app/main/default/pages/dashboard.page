@@ -1,0 +1,92 @@
+<apex:page standardController="Account" extensions="CustomAccount">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <!-- <apex:form >
+        <apex:pageblock >        
+        <apex:pageblockbuttons >
+            <apex:commandLink value="Save" action="{!saveAccount}"/>
+        <apex:commandButton value="Save" action="{!saveAccount}"/>
+        </apex:pageblockbuttons>
+        
+            <apex:pageblocksection title="Information">
+                <apex:pageblockSectionItem >
+                    <apex:outputText value="Name"/>
+                    <apex:inputtext value="{!accName}"/>
+                </apex:pageblockSectionItem>
+            </apex:pageblocksection>
+        </apex:pageblock>
+    </apex:form> -->
+    
+    <script>
+ 
+        $(function(){
+             
+             console.log('-----------');
+             $(document).on('click', '.updateProgress', function(){
+                   
+                 var recordId = getRecordId($(this));
+                 var recordText = getRecordText($(this));
+                 
+                 if(recordText != undefined) {                     
+                    updateProgressByAction(recordId, recordText);
+                 } else {
+                     alert('No Value');
+                 }
+                 
+             });
+             
+             var getRecordId = (currentRef) => {
+             
+                return currentRef.attr('data-for');
+             
+             }
+             
+             var getRecordText = (currentRef) => {
+             
+                var spanRecordId = '_value';
+                var innerTextSpanId = currentRef.parent().closest('tr').find('td.pageBlockAccountName').find('span').attr('id');
+                innerTextSpanId = innerTextSpanId.replace(/\:/g, "_");
+                return currentRef.parent().closest('tr').find('td.pageBlockAccountName').find('input#'+innerTextSpanId +spanRecordId).attr('value');
+             
+             }
+                                 
+        });
+        
+        function callmethod(recordId, recordText) {
+        
+            updateProgressByAction(recordId, recordText);
+        
+        }
+        
+    </script>
+    
+    <apex:form id="form">
+    
+    <apex:actionFunction name="updateProgressByAction" action="{!updateAccount}" reRender="block">
+        <apex:param name="customId" value=""/>
+        <apex:param name="recordName" value=""/>
+    </apex:actionFunction>
+    
+       <apex:outputPanel id="renderText">
+           <apex:outputLabel value="{!recordName}"></apex:outputLabel>
+       </apex:outputPanel>
+    
+    <apex:pageBlock title="Account Information" id="block">
+            <apex:pageBlockTable value="{!PrintAccounts}" var="accountRow" id="table">
+                <apex:column id="AccountId" styleClass="pageBlockAccountId" html-data-id="{!accountRow.Id}" value="{!accountRow.Id}"/>
+                <apex:column id="AccountName" styleClass="pageBlockAccountName" value="{!accountRow.Name}"/>  
+                <apex:column headerValue="Contacts">      
+                    <apex:repeat value="{!accountRow.Contacts}" var="contact"> 
+                        <apex:outputText value="{!contact.LastName}"/>   
+                        <br />
+                    </apex:repeat>
+                </apex:column>  
+                
+                <apex:column headerValue="Action">                   
+                    <apex:commandLink value="Update" styleClass="updateProgress" html-data-for="{!accountRow.Id}" reRender="false" />                
+                </apex:column>
+                
+            </apex:pageBlockTable>
+            <apex:inlineEditSupport />
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
